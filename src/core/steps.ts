@@ -67,11 +67,23 @@ export async function nextStep() {
   const nextStep = this._introItems[this._currentStep];
   let continueStep = true;
 
+  if (this._exited) {
+    return false
+  }
+  
   if (typeof this._introBeforeChangeCallback !== "undefined") {
     continueStep = await this._introBeforeChangeCallback.call(
       this,
       nextStep && nextStep.element
     );
+  }
+  
+  if (nextStep && typeof nextStep.onbeforechange !== "undefined") {
+    continueStep = continueStep && await nextStep.onbeforechange();
+  }
+
+  if (this._exited) {
+    return false
   }
 
   // if `onbeforechange` returned `false`, stop displaying the element
@@ -94,6 +106,10 @@ export async function nextStep() {
 
   await showElement.call(this, nextStep);
 
+  if (nextStep && typeof nextStep.onafterchange !== "undefined") {
+    continueStep = continueStep && await nextStep.onafterchange();
+  }
+
   return true;
 }
 
@@ -114,13 +130,29 @@ export async function previousStep() {
   const nextStep = this._introItems[this._currentStep];
   let continueStep = true;
 
+  if (this._exited) {
+    return false
+  }
+
   if (typeof this._introBeforeChangeCallback !== "undefined") {
     continueStep = await this._introBeforeChangeCallback.call(
       this,
       nextStep && nextStep.element
     );
   }
+  
+  if (this._exited) {
+    return false
+  }
 
+  if (typeof nextStep.introBeforeChangeCallback !== "undefined") {
+    continueStep = await nextStep.introBeforeChangeCallback();
+  }
+
+  if (this._exited) {
+    return false
+  }
+  
   // if `onbeforechange` returned `false`, stop displaying the element
   if (continueStep === false) {
     ++this._currentStep;
@@ -128,6 +160,10 @@ export async function previousStep() {
   }
 
   await showElement.call(this, nextStep);
+
+  if (typeof nextStep.onafterchange !== "undefined") {
+    continueStep = continueStep && await nextStep.onafterchange();
+  }
 
   return true;
 }

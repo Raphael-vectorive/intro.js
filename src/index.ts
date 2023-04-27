@@ -28,6 +28,7 @@ class IntroJs {
   public _targetElement: HTMLElement;
   public _introItems: Step[] = [];
   public _options: Record<string, any>;
+  public _exited: boolean;
   public _introBeforeChangeCallback: Function;
   public _introChangeCallback: Function;
   public _introAfterChangeCallback: Function;
@@ -39,9 +40,12 @@ class IntroJs {
   public _introExitCallback: Function;
   public _introSkipCallback: Function;
   public _introBeforeExitCallback: Function;
+  public _introBeforeRefreshCallback: Function;
+  public _introAfterRefreshCallback: Function;
 
   public constructor(targetElement: HTMLElement) {
     this._targetElement = targetElement;
+    this._exited = false
 
     this._options = {
       /* Is this tour instance active? Don't show the tour again if this flag is set to false */
@@ -203,8 +207,8 @@ class IntroJs {
     return this;
   }
 
-  refresh(refreshSteps?: boolean) {
-    refresh.call(this, refreshSteps);
+  async refresh(refreshSteps?: boolean) {
+    await refresh.call(this, refreshSteps);
     return this;
   }
 
@@ -223,7 +227,7 @@ class IntroJs {
     }
     return this;
   }
-
+  
   onchange(providedCallback: Function) {
     if (typeof providedCallback === "function") {
       this._introChangeCallback = providedCallback;
@@ -238,6 +242,26 @@ class IntroJs {
       this._introAfterChangeCallback = providedCallback;
     } else {
       throw new Error("Provided callback for onafterchange was not a function");
+    }
+    return this;
+  }
+  
+  onbeforerefresh(providedCallback: Function) {
+    if (typeof providedCallback === "function") {
+      this._introBeforeRefreshCallback = providedCallback;
+    } else {
+      throw new Error(
+        "Provided callback for onbeforerefresh was not a function"
+      );
+    }
+    return this;
+  }
+  
+  onafterrefresh(providedCallback: Function) {
+    if (typeof providedCallback === "function") {
+      this._introAfterRefreshCallback = providedCallback;
+    } else {
+      throw new Error("Provided callback for onafterrefresh was not a function");
     }
     return this;
   }

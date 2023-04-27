@@ -16,13 +16,15 @@ const inputPath = './src'
 const outputPath = './dist';
 
 const banner = `/*!
- * Intro.js v${pkg.version}
+ * Intro.js v${pkg.version}-vectorive
  * https://introjs.com
  *
  * Copyright (C) 2012-${new Date().getFullYear()} Afshin Mehrabani (@afshinmeh).
  * https://introjs.com
  *
  * Date: ${new Date().toUTCString()}
+ * 
+ * VECTORIVE FORK
  */
 `;
 

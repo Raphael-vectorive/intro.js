@@ -17,6 +17,7 @@ export default async function exitIntro(
   force: boolean
 ) {
   let continueExit = true;
+  this._exited = true
 
   // calling onbeforeexit callback
   //

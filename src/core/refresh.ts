@@ -8,7 +8,14 @@ import { _recreateBullets, _updateProgressBar } from "./showElement";
  * Update placement of the intro objects on the screen
  * @api private
  */
-export default function refresh(refreshSteps?: boolean) {
+export default async function refresh(refreshSteps?: boolean) {
+
+  if (typeof this._introBeforeRefreshCallback !== "undefined") {
+    await this._introBeforeRefreshCallback.call(
+      this,
+    );
+  }
+
   const referenceLayer = document.querySelector(
     ".introjs-tooltipReferenceLayer"
   );
@@ -45,5 +52,12 @@ export default function refresh(refreshSteps?: boolean) {
 
   //re-align hints
   reAlignHints.call(this);
+
+  if (typeof this._introAfterRefreshCallback !== "undefined") {
+    await this._introAfterRefreshCallback.call(
+      this,
+    );
+  }
+  
   return this;
 }

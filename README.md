@@ -12,6 +12,23 @@
   </a>
 </p>
 
+---
+---
+## MODIFICATIONS BY VECTORIVE
+To fix the bug that appears when you try to change step and quit at the same time 
+- Add `_exited` boolean to intro.
+- Set `_exited` to true at the exact moment the event is triggered
+- Add stop condition in `nextStep` function if `_exited == true`
+
+To add action before and after steps
+- Run step `onBeforeChange` and `onAfterChange`
+
+To add action before and after refresh
+- `onafterrefresh`
+- `onbeforerefresh`
+
+---
+---
 ## Where to get
 You can obtain your local copy of Intro.js from:
 
