@@ -78,8 +78,8 @@ export async function nextStep() {
     );
   }
   
-  if (nextStep && typeof nextStep.onbeforechange !== "undefined") {
-    continueStep = continueStep && await nextStep.onbeforechange();
+  if (nextStep && nextStep.onbeforechange && typeof nextStep.onbeforechange !== "undefined") {
+    continueStep = await eval(nextStep.onbeforechange)() && continueStep;
   }
 
   if (this._exited) {
@@ -106,8 +106,8 @@ export async function nextStep() {
 
   await showElement.call(this, nextStep);
 
-  if (nextStep && typeof nextStep.onafterchange !== "undefined") {
-    continueStep = continueStep && await nextStep.onafterchange();
+  if (nextStep && nextStep.onafterchange && typeof nextStep.onafterchange !== "undefined") {
+    continueStep = await eval(nextStep.onafterchange)() && continueStep;
   }
 
   return true;
@@ -145,8 +145,8 @@ export async function previousStep() {
     return false
   }
 
-  if (typeof nextStep.introBeforeChangeCallback !== "undefined") {
-    continueStep = await nextStep.introBeforeChangeCallback();
+  if (nextStep && nextStep.onbeforechange && typeof nextStep.onbeforechange !== "undefined") {
+    continueStep = await eval(nextStep.onbeforechange)();
   }
 
   if (this._exited) {
@@ -161,8 +161,8 @@ export async function previousStep() {
 
   await showElement.call(this, nextStep);
 
-  if (typeof nextStep.onafterchange !== "undefined") {
-    continueStep = continueStep && await nextStep.onafterchange();
+  if (nextStep.onafterchange && typeof nextStep.onafterchange !== "undefined") {
+    continueStep = continueStep && await eval(nextStep.onafterchange)();
   }
 
   return true;
